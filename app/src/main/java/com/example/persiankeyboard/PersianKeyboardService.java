@@ -1,6 +1,5 @@
 package com.example.persiankeyboard;
 
-import android.graphics.Color;
 import android.inputmethodservice.InputMethodService;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -159,4 +158,31 @@ public class PersianKeyboardService extends InputMethodService {
         Button button = new Button(this);
 
         button.setText(text);
-        button.setText
+        button.setTextSize(18);
+        button.setAllCaps(false);
+        button.setGravity(Gravity.CENTER);
+
+        button.setBackgroundResource(R.drawable.key_background);
+
+        return button;
+    }
+
+    private LinearLayout.LayoutParams buttonParams(float weight) {
+
+        LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(
+                        0,
+                        KEY_HEIGHT,
+                        weight
+                );
+
+        params.setMargins(
+                KEY_MARGIN,
+                KEY_MARGIN,
+                KEY_MARGIN,
+                KEY_MARGIN
+        );
+
+        return params;
+    }
+}
