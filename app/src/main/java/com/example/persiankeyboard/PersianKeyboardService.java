@@ -1,6 +1,8 @@
 package com.example.persiankeyboard;
 
+import android.graphics.Color;
 import android.inputmethodservice.InputMethodService;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -11,12 +13,16 @@ public class PersianKeyboardService extends InputMethodService {
     private LinearLayout keyboard;
     private boolean englishMode = false;
 
+    private final int KEY_HEIGHT = 58;
+    private final int KEY_MARGIN = 3;
+
     @Override
     public View onCreateInputView() {
 
         keyboard = new LinearLayout(this);
         keyboard.setOrientation(LinearLayout.VERTICAL);
-        keyboard.setPadding(8, 8, 8, 8);
+        keyboard.setGravity(Gravity.CENTER);
+        keyboard.setPadding(12, 10, 12, 10);
 
         buildKeyboard();
 
@@ -71,6 +77,7 @@ public class PersianKeyboardService extends InputMethodService {
 
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER);
 
         for (String key : keys) {
 
@@ -79,7 +86,6 @@ public class PersianKeyboardService extends InputMethodService {
             button.setOnClickListener(v -> {
 
                 if (getCurrentInputConnection() != null) {
-
                     getCurrentInputConnection().commitText(
                             ((Button) v).getText().toString(),
                             1
@@ -97,14 +103,13 @@ public class PersianKeyboardService extends InputMethodService {
 
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER);
 
         Button language = createButton(englishMode ? "فارسی" : "EN");
 
         language.setOnClickListener(v -> {
-
             englishMode = !englishMode;
             buildKeyboard();
-
         });
 
         Button backspace = createButton("⌫");
@@ -112,7 +117,6 @@ public class PersianKeyboardService extends InputMethodService {
         backspace.setOnClickListener(v -> {
 
             if (getCurrentInputConnection() != null) {
-
                 getCurrentInputConnection()
                         .deleteSurroundingText(1, 0);
             }
@@ -123,7 +127,6 @@ public class PersianKeyboardService extends InputMethodService {
         space.setOnClickListener(v -> {
 
             if (getCurrentInputConnection() != null) {
-
                 getCurrentInputConnection()
                         .commitText(" ", 1);
             }
@@ -134,7 +137,6 @@ public class PersianKeyboardService extends InputMethodService {
         enter.setOnClickListener(v -> {
 
             if (getCurrentInputConnection() != null) {
-
                 getCurrentInputConnection().sendKeyEvent(
                         new KeyEvent(
                                 KeyEvent.ACTION_DOWN,
@@ -146,7 +148,7 @@ public class PersianKeyboardService extends InputMethodService {
 
         row.addView(language, buttonParams(1));
         row.addView(backspace, buttonParams(1));
-        row.addView(space, buttonParams(3));
+        row.addView(space, buttonParams(4));
         row.addView(enter, buttonParams(1));
 
         keyboard.addView(row);
@@ -157,22 +159,4 @@ public class PersianKeyboardService extends InputMethodService {
         Button button = new Button(this);
 
         button.setText(text);
-        button.setTextSize(18);
-        button.setAllCaps(false);
-
-        button.setBackgroundResource(
-                R.drawable.key_background
-        );
-
-        return button;
-    }
-
-    private LinearLayout.LayoutParams buttonParams(float weight) {
-
-        return new LinearLayout.LayoutParams(
-                0,
-                58,
-                weight
-        );
-    }
-}
+        button.setText
