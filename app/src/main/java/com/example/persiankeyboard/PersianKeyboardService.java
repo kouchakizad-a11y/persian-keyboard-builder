@@ -12,8 +12,8 @@ public class PersianKeyboardService extends InputMethodService {
     private LinearLayout keyboard;
     private boolean englishMode = false;
 
-    private final int KEY_HEIGHT = 58;
-    private final int KEY_MARGIN = 3;
+    private final int KEY_HEIGHT = 64;
+    private final int KEY_MARGIN = 4;
 
     @Override
     public View onCreateInputView() {
@@ -158,9 +158,13 @@ public class PersianKeyboardService extends InputMethodService {
         Button button = new Button(this);
 
         button.setText(text);
-        button.setTextSize(18);
+        button.setTextSize(20);
         button.setAllCaps(false);
         button.setGravity(Gravity.CENTER);
+        button.setMinHeight(64);
+        button.setMinWidth(0);
+        button.setPadding(0, 0, 0, 0);
+        button.setIncludeFontPadding(false);
 
         button.setBackgroundResource(R.drawable.key_background);
 
@@ -185,4 +189,4 @@ public class PersianKeyboardService extends InputMethodService {
 
         return params;
     }
-}
+            }
