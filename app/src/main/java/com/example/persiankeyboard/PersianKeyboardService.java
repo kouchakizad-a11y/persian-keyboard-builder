@@ -4,6 +4,7 @@ import android.inputmethodservice.InputMethodService;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -135,14 +136,40 @@ public class PersianKeyboardService extends InputMethodService {
 
         enter.setOnClickListener(v -> {
 
-            if (getCurrentInputConnection() != null) {
-                getCurrentInputConnection().sendKeyEvent(
-                        new KeyEvent(
-                                KeyEvent.ACTION_DOWN,
-                                KeyEvent.KEYCODE_ENTER
-                        )
-                );
+            if (getCurrentInputConnection() == null) {
+                return;
             }
+
+            EditorInfo editorInfo = getCurrentInputEditorInfo();
+
+            if (editorInfo != null) {
+
+                int action = editorInfo.imeOptions
+                        & EditorInfo.IME_MASK_ACTION;
+
+                if (action != EditorInfo.IME_ACTION_NONE
+                        && action != EditorInfo.IME_ACTION_UNSPECIFIED) {
+
+                    getCurrentInputConnection()
+                            .performEditorAction(action);
+
+                    return;
+                }
+            }
+
+            getCurrentInputConnection().sendKeyEvent(
+                    new KeyEvent(
+                            KeyEvent.ACTION_DOWN,
+                            KeyEvent.KEYCODE_ENTER
+                    )
+            );
+
+            getCurrentInputConnection().sendKeyEvent(
+                    new KeyEvent(
+                            KeyEvent.ACTION_UP,
+                            KeyEvent.KEYCODE_ENTER
+                    )
+            );
         });
 
         row.addView(language, buttonParams(1));
