@@ -13,6 +13,7 @@ public class PersianKeyboardService extends InputMethodService {
 
         LinearLayout keyboard = new LinearLayout(this);
         keyboard.setOrientation(LinearLayout.VERTICAL);
+        keyboard.setPadding(8, 8, 8, 8);
 
         addRow(keyboard, new String[]{
                 "ض", "ص", "ث", "ق", "ف", "غ", "ع", "ه", "خ", "ح", "ج", "چ"
@@ -34,7 +35,6 @@ public class PersianKeyboardService extends InputMethodService {
                 ".", "،", "؟", "!", ":", ";", "(", ")", "-", "_"
         });
 
-        // ردیف پایین
         LinearLayout bottomRow = new LinearLayout(this);
         bottomRow.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -102,6 +102,11 @@ public class PersianKeyboardService extends InputMethodService {
         Button button = new Button(this);
         button.setText(text);
         button.setTextSize(18);
+        button.setAllCaps(false);
+        button.setBackgroundResource(
+                com.example.persiankeyboard.R.drawable.key_background
+        );
+
         return button;
     }
 
@@ -109,7 +114,7 @@ public class PersianKeyboardService extends InputMethodService {
 
         return new LinearLayout.LayoutParams(
                 0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                58,
                 weight
         );
     }
