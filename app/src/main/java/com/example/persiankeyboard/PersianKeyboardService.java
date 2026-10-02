@@ -175,4 +175,4 @@ public class PersianKeyboardService extends InputMethodService {
                 weight
         );
     }
-            }
+}
