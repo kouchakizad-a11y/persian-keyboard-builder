@@ -1,6 +1,7 @@
 package com.example.persiankeyboard;
 
 import android.inputmethodservice.InputMethodService;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -13,75 +14,103 @@ public class PersianKeyboardService extends InputMethodService {
         LinearLayout keyboard = new LinearLayout(this);
         keyboard.setOrientation(LinearLayout.VERTICAL);
 
-        String[][] keys = {
-                {"ض", "ص", "ث", "ق", "ف", "غ", "ع", "ه", "خ", "ح", "ج", "چ"},
-                {"ش", "س", "ی", "ب", "ل", "ا", "ت", "ن", "م", "ک", "گ"},
-                {"ظ", "ط", "ز", "ر", "ذ", "د", "پ", "و", "ژ"}
-        };
+        addRow(keyboard, new String[]{
+                "ض", "ص", "ث", "ق", "ف", "غ", "ع", "ه", "خ", "ح", "ج", "چ"
+        });
 
-        for (String[] row : keys) {
+        addRow(keyboard, new String[]{
+                "ش", "س", "ی", "ب", "ل", "ا", "ت", "ن", "م", "ک", "گ"
+        });
 
-            LinearLayout rowLayout = new LinearLayout(this);
-            rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+        addRow(keyboard, new String[]{
+                "ظ", "ط", "ز", "ر", "ذ", "د", "پ", "و", "ژ"
+        });
 
-            for (String key : row) {
+        addRow(keyboard, new String[]{
+                "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹", "۰"
+        });
 
-                Button button = new Button(this);
-                button.setText(key);
+        addRow(keyboard, new String[]{
+                ".", "،", "؟", "!", ":", ";", "(", ")", "-", "_"
+        });
 
-                button.setOnClickListener(v -> {
-                    Button b = (Button) v;
-                    getCurrentInputConnection()
-                            .commitText(b.getText().toString(), 1);
-                });
+        // ردیف پایین
+        LinearLayout bottomRow = new LinearLayout(this);
+        bottomRow.setOrientation(LinearLayout.HORIZONTAL);
 
-                rowLayout.addView(button,
-                        new LinearLayout.LayoutParams(
-                                0,
-                                LinearLayout.LayoutParams.WRAP_CONTENT,
-                                1
-                        ));
-            }
-
-            keyboard.addView(rowLayout);
-        }
-
-        // Space
-        Button space = new Button(this);
-        space.setText("فاصله");
-        space.setOnClickListener(v ->
-                getCurrentInputConnection().commitText(" ", 1)
-        );
-
-        keyboard.addView(space);
-
-        // Backspace
-        Button backspace = new Button(this);
-        backspace.setText("⌫");
+        Button backspace = createButton("⌫");
         backspace.setOnClickListener(v -> {
             if (getCurrentInputConnection() != null) {
                 getCurrentInputConnection().deleteSurroundingText(1, 0);
             }
         });
 
-        keyboard.addView(backspace);
+        Button space = createButton("فاصله");
+        space.setOnClickListener(v -> {
+            if (getCurrentInputConnection() != null) {
+                getCurrentInputConnection().commitText(" ", 1);
+            }
+        });
 
-        // Enter
-        Button enter = new Button(this);
-        enter.setText("↵");
+        Button enter = createButton("↵");
         enter.setOnClickListener(v -> {
             if (getCurrentInputConnection() != null) {
                 getCurrentInputConnection().sendKeyEvent(
-                        new android.view.KeyEvent(
-                                android.view.KeyEvent.ACTION_DOWN,
-                                android.view.KeyEvent.KEYCODE_ENTER
+                        new KeyEvent(
+                                KeyEvent.ACTION_DOWN,
+                                KeyEvent.KEYCODE_ENTER
                         )
                 );
             }
         });
 
-        keyboard.addView(enter);
+        bottomRow.addView(backspace, buttonParams(1));
+        bottomRow.addView(space, buttonParams(3));
+        bottomRow.addView(enter, buttonParams(1));
+
+        keyboard.addView(bottomRow);
 
         return keyboard;
     }
-            }
+
+    private void addRow(LinearLayout keyboard, String[] keys) {
+
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+
+        for (String key : keys) {
+
+            Button button = createButton(key);
+
+            button.setOnClickListener(v -> {
+                if (getCurrentInputConnection() != null) {
+                    getCurrentInputConnection().commitText(
+                            ((Button) v).getText().toString(),
+                            1
+                    );
+                }
+            });
+
+            row.addView(button, buttonParams(1));
+        }
+
+        keyboard.addView(row);
+    }
+
+    private Button createButton(String text) {
+
+        Button button = new Button(this);
+        button.setText(text);
+        button.setTextSize(18);
+        return button;
+    }
+
+    private LinearLayout.LayoutParams buttonParams(float weight) {
+
+        return new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                weight
+        );
+    }
+}
